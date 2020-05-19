@@ -144,3 +144,20 @@ write.csv(dat, "./data/clean_co2_data.csv")
 
 list.files("data")
 
+#------------------------------------
+# Exercises:
+
+# 1.1. What is the structure of the data?
+
+# 1.2. What are the classes of the data columns?
+
+# 1.3. How many rows are in the dataset?
+
+# 1.4. Create a new dataframe named dat_1970s with all data from rows 562-1082.
+
+# 1.5. What was the mean value of the CO2 concentration in the 1970s?
+
+# 1.6. Plot the full dataset (1958 - present) as concentration ~ date using the plot() function.
+
+
+
