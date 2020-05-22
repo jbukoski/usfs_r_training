@@ -18,11 +18,11 @@
 
 ## Install a new package
 
-install.packages("tidyverse")
+#install.packages("tidyverse")
 
 # To examine what packages are installed on your machine, run the following:
 
-library()
+library("tidyverse")
 
 # Packages are in constant development and there are many that may be useful
 # for a particular scientist, analyst, or task at hand.
@@ -79,11 +79,10 @@ getwd()
 
 list.files()
 
-
 # Typically I create a directory for each project I have and create two
 # subdirectories within it - one for "scripts", and one for "data"
 
-# my_WD 
+# my_WD (my R project file is in here)
 #    |____ scripts
 #             |______00_script1.R
 #             |______01_script2.R
@@ -128,11 +127,15 @@ list.files("data")
 
 # We can load that data into R using the read.csv() function:
 
-dat <- read.csv("./data/co2_data.csv", header = FALSE, skip = 44)
+dat <- read.csv("./data/co2_data.csv")
+
+dat <- read.csv("./data/co2_data.csv", skip = 45, header = FALSE)
 
 head(dat)
 
 # Assign column names:
+
+colnames(dat)
 
 colnames(dat) <- c("date", "concentration")
 
@@ -158,6 +161,4 @@ list.files("data")
 # 1.5. What was the mean value of the CO2 concentration in the 1970s?
 
 # 1.6. Plot the full dataset (1958 - present) as concentration ~ date using the plot() function.
-
-
 
