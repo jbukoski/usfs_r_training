@@ -61,7 +61,7 @@ help(read.csv)
 
 #Let's add a row of NAs in the middle
 # Vamos a a?adir una fila de AN en el medio
-dat <- rbind(dat[1:5,],rep(NA,6),dat[6:9,])
+dat <- rbind(dat[1:5,], rep(NA,6), dat[6:9,])
 
 # Let's simulate what occationally happens when reading from an excel file and rows of NAs are 
 # added to the bottom of the data frame.  
