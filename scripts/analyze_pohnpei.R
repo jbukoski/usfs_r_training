@@ -28,25 +28,55 @@ dat <- read_excel(path = "data/revisedPNI_mangrove_TreesFile.xlsx") %>%
          hgt = rowMeans(cbind(hgt1, hgt2), na.rm = T)) %>%
   select(-hgt1, -hgt2)
 
-#------------------------------------
-# Convert dbh to volume, and then biomass
+source("./scripts/pohnpei_allometry_2.R")
 
-test_df <- dat %>%
+#------------------------------------
+# Convert DBH to volume, and then biomass
+
+biomassData <- dat %>%
   select(-dens, -species) %>%
   left_join(allom_lookup, by = c("sps_code" = "sps_code")) %>%
   mutate(params = map2(dbh, density, list)) %>%
   mutate(agb = invoke_map_dbl(ag_form, params),
          leaf = invoke_map_dbl(leaf_form, params),
          roots = invoke_map_dbl(root_form, params),
-         bgb = invoke_map_dbl(bg_form, params)) %>%
-  select(sps_code, dbh, density, agb, leaf, roots, bgb)
-
-test_df %>%
-  group_by(sps_code) %>%
-  summarise(ttl_agb = sum(agb))
+         bgb = invoke_map_dbl(bg_form, params))
 
 
-head(dat)
 
-head(allom_lookup)
+biomassData <- biomassData %>%
+  mutate(plot = ifelse(plot == "River", "Riverine", plot),
+         plt_area = pi * plt_radius^2) %>%
+  rowwise() %>%
+  mutate(ttl_biomass = sum(agb, leaf, roots, bgb),
+         ttl_biom_Mg_ha = 10 * ttl_biomass / plt_area,
+         dens_ha = 10000 * n() / plt_area) %>%
+  ungroup() %>%
+  group_by(sites, plot, subplot, sps_code) %>%
+  mutate(site_biomass = sum(ttl_biom_Mg_ha),
+         n_trees = sum(dens_ha),
+         dbh_avg = mean(dbh)) %>%
+  ungroup()
+
+
+dat2plot <- biomassData %>%
+  select(sites, plot, subplot, sps_code, site_biomass, n_trees, dbh_avg) %>%
+  distinct()
+
+plot(dat2plot$dbh_avg, dat2plot$n_trees, col = as.factor(dat2plot$sps_code))
+
+View(biomassData)
+
+
+
+unique(biomassData$sites)
+unique(biomassData$plot)
+unique(biomassData$subplot)
+
+biomassData %>%
+  group_by(sites, plot, subplot) %>%
+  summarize(n = n()) %>% 
+  View()
+       
+       
     
